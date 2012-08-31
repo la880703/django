@@ -37,8 +37,15 @@ class CursorWrapper(object):
             print "******************** query statement ********************"
             print query
             print "*************** args ************"
+            tempArgs = list ()
+            for x in args:
+                if x == bool (x):
+                    x = int (x)
+                tempArgs.append (x)
+                args = tuple (tempArgs)
             print args
             print
+
             
             return self.cursor.execute(query, args)
 
@@ -49,6 +56,11 @@ class CursorWrapper(object):
 
     def executemany(self, query, args):
         try:
+            for x in args:
+                if x == bool (x):
+                    x = int (x)
+                tempArgs.append (x)
+                args = tuple (tempArgs)
             query = query.replace("%s","?")
             return self.cursor.executemany(query, args)
         except Database.IntegrityError, e:
@@ -261,7 +273,7 @@ class DatabaseWrapper(BaseDatabaseWrapper):
                 passwd = settings_dict['PASSWORD']
 #                url += ':' + settings_dict['PASSWORD']
 
-            self.connection = Database.connect(url, user, passwd, "utf-8")
+            self.connection = Database.connect(url, user, passwd)
             connection_created.send(sender=self.__class__, connection=self)
         cursor = CursorWrapper(self.connection.cursor())
         return cursor
