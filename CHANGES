@@ -1,1 +1,3 @@
-test
+2012/08/31
+ - Add routine for replacing boolean type(on Python) to integer for CUBRID.
+ - Remove 4th argument for correct connection on base.py.
