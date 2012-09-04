@@ -1,3 +1,6 @@
 2012/08/31
- - Add routine for replacing boolean type(on Python) to integer for CUBRID.
- - Remove 4th argument for correct connection on base.py.
+ - Adds routine for replacing boolean type(on Python) to integer for CUBRID.
+ - Removes 4th argument for correct connection on base.py.
+2012/09/04
+ - Replaced method checking boolean type.
+ - Adds routine for replacing unicode type(on Python) to UTF-8 encode string type.
