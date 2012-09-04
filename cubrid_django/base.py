@@ -39,8 +39,10 @@ class CursorWrapper(object):
             print "*************** args ************"
             tempArgs = list ()
             for x in args:
-                if x == bool (x):
+                if type (x) == type (bool ()):
                     x = int (x)
+                elif type (x) == type (unicode ()):
+                    x = x.encode ('utf-8')
                 tempArgs.append (x)
                 args = tuple (tempArgs)
             print args
