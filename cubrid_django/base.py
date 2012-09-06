@@ -41,7 +41,7 @@ class CursorWrapper(object):
             for x in args:
                 if type (x) == type (bool ()):
                     x = int (x)
-                elif type (x) == type (unicode ()):
+                elif type (x) == type (unicode ()) or type (x) == type (str ()):
                     x = x.encode ('utf-8')
                 tempArgs.append (x)
                 args = tuple (tempArgs)
@@ -59,8 +59,10 @@ class CursorWrapper(object):
     def executemany(self, query, args):
         try:
             for x in args:
-                if x == bool (x):
+                if type (x) == type (bool ()):
                     x = int (x)
+                elif type (x) == type (unicode ()) or type (x) == type (str ()):
+                    x = x.encode ('utf-8')
                 tempArgs.append (x)
                 args = tuple (tempArgs)
             query = query.replace("%s","?")
