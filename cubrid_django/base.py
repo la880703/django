@@ -34,21 +34,24 @@ class CursorWrapper(object):
     def execute(self, query, args=None):
         try:
             query = query.replace("%s", "?")
-            print "******************** query statement ********************"
-            print query
-            print "*************** args ************"
+            global settings
+            if settings.DEBUG == True:
+                print "******************** query statement ********************"
+                print query
+                print "*************** args ************"
             tempArgs = list ()
-            for x in args:
-                if type (x) == type (bool ()):
-                    x = int (x)
-                elif type (x) == type (unicode ()) or type (x) == type (str ()):
-                    x = x.encode ('utf-8')
-                tempArgs.append (x)
-                args = tuple (tempArgs)
-            print args
-            print
+            if args is not None:
+                for x in args:
+                    if type (x) == type (bool ()):
+                        x = int (x)
+                    elif type (x) == type (unicode ()) or type (x) == type (str ()):
+                        x = x.encode ('utf-8')
+                    tempArgs.append (x)
+            args = tuple (tempArgs)
+            if settings.DEBUG == True:
+                print args
+                print
 
-            
             return self.cursor.execute(query, args)
 
         except Database.IntegrityError, e:
