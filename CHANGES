@@ -3,4 +3,10 @@
  - Removes 4th argument for correct connection on base.py.
 2012/09/04
  - Replaced method checking boolean type.
- - Adds routine for replacing unicode type(on Python) to UTF-8 encode string type.
+ - Adds routine for replacing unicode type(on Python) to UTF-8 encoded string type.
+2012/09/06
+ - Adds routine for replacing string type(on Python) to UTF-8 encoded string type.
+ - Adds routine for replacing unicode and string type(on Python) to UTF-8 encoded string type to executemany function too.
+2012/09/09
+ - Modified routine to print SQL debug message when DEBUG value is True in settings.
+ - args 변수가 None일 경우 unicode, string 형식의 인자를 UTF-8로 인코딩 된 string 형식으로 변환하기 위한 for 문 실행시 발생하는 문제를 예방하기 위한 루틴 추가.(영작 필요)
