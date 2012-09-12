@@ -1,6 +1,13 @@
 from django.db.models.sql import compiler
 
 class SQLCompiler(compiler.SQLCompiler):
+    def resolve_columns (self, row, fields = ()):
+        values = list ();
+        for value, field in map (None, row[0:], fields):
+            if value in (0, 1) and field and field.get_internal_type () in ('BooleanField', 'NullBooleanField'):
+                value = bool (value)
+            values.append (value)
+        return (tuple (values))
 
     def as_sql(self, with_limits=True, with_col_aliases=False):
         """
