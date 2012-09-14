@@ -59,6 +59,33 @@ class DatabaseCreation(BaseDatabaseCreation):
 
             return output, pending
 
+    def sql_indexes_for_field(self, model, f, style):
+        """
+        Return the CREATE INDEX SQL statements for a single model field.
+        """
+        from django.db.backends.util import truncate_name
+
+        if f.db_index and not f.unique and not f.rel and not f.primary_key:
+            qn = self.connection.ops.quote_name
+            tablespace = f.db_tablespace or model._meta.db_tablespace
+            if tablespace:
+                tablespace_sql = self.connection.ops.tablespace_sql(tablespace)
+                if tablespace_sql:
+                    tablespace_sql = ' ' + tablespace_sql
+            else:
+                tablespace_sql = ''
+            i_name = '%s_%s' % (model._meta.db_table, self._digest(f.column))
+            output = [style.SQL_KEYWORD('CREATE INDEX') + ' ' +
+                style.SQL_TABLE(qn(truncate_name(
+                    i_name, self.connection.ops.max_name_length()))) + ' ' +
+                style.SQL_KEYWORD('ON') + ' ' +
+                style.SQL_TABLE(qn(model._meta.db_table)) + ' ' +
+                "(%s)" % style.SQL_FIELD(qn(f.column)) +
+                "%s;" % tablespace_sql]
+        else:
+            output = []
+        return output
+
     def create_test_db(self, verbosity=1, autoclobber=False):
         """
         Creates a test database, prompting the user for confirmation if the
