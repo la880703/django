@@ -10,3 +10,10 @@
 2012/09/09
  - Modified routine to print SQL debug message when DEBUG value is True in settings.
  - args 변수가 None일 경우 unicode, string 형식의 인자를 UTF-8로 인코딩 된 string 형식으로 변환하기 위한 for 문 실행시 발생하는 문제를 예방하기 위한 루틴 추가.(영작 필요)
+2012/09/10
+ - string, unicode 형식 질의 인자 발견시 UTF-8로 인코딩 하도록 조치한 것을 DEFAULT_CHARSET 설정에 따라 인코딩 하도록 수정함.(영작 필요)
+2012/09/13
+ - Adds routine 1 or 0 to True or False when field type of column on result row is BooleanField or NullBooleanField.
+2012/09/14
+ - 특정 필드에 PRIMARY KEY 또는 FOREIGN KEY 제약이 있는 경우 INDEX를 생성하지 않도록 수정(영작 필요)
+  (CUBRID는 PRIMARY KEY, FOREIGN KEY 생성시 내부적으로 INDEX를 생성하여 해당 필드에 INDEX를 다시 생성하려고 하면 충돌 발생함)(영작 필요)
