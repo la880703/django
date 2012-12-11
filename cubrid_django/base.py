@@ -4,9 +4,11 @@ Cubrid database backend for Django.
 Requires CUBRIDdb: http://www.cubrid.org/wiki_apis
 """
 
+import sys
+
 try:
     import CUBRIDdb as Database
-except ImportError, e:
+except ImportError as e:
     from django.core.exceptions import ImproperlyConfigured
     raise ImproperlyConfigured("Error loading CUBRIDdb module: %s" % e)
 
@@ -36,25 +38,29 @@ class CursorWrapper(object):
             query = query.replace("%s", "?")
             global settings
             if settings.DEBUG == True:
-                print "******************** query statement ********************"
-                print query
-                print "*************** args ************"
+                print ("******************** query statement ********************")
+                print (query)
+                print ("*************** args ************")
             tempArgs = list ()
             if args is not None:
                 for x in args:
                     if type (x) == type (bool ()):
                         x = int (x)
-                    elif type (x) == type (unicode ()) or type (x) == type (str ()):
-                        x = x.encode (settings.DEFAULT_CHARSET)
+                    elif sys.version_info < (3, 0):
+                        if type (x) == type (unicode ()) or type (x) == type (str ()):
+                            x = x.encode (settings.DEFAULT_CHARSET)
+                    elif sys.version_info >= (3, 0):
+                        if type (x) == type (str ()):
+                            x = x.encode (settings.DEFAULT_CHARSET)
                     tempArgs.append (x)
             args = tuple (tempArgs)
             if settings.DEBUG == True:
-                print args
-                print
+                print (args)
+                print ()
 
             return self.cursor.execute(query, args)
 
-        except Database.IntegrityError, e:
+        except Database.IntegrityError as e:
             raise utils.IntegrityError, utils.IntegrityError(*tuple(e)), sys.exc_info()[2]
         except Database.DatabaseError, e:
             raise utils.DatabaseError, utils.DatabaseError(*tuple(e)), sys.exc_info()[2]
@@ -65,8 +71,12 @@ class CursorWrapper(object):
             for x in args:
                 if type (x) == type (bool ()):
                     x = int (x)
-                elif type (x) == type (unicode ()) or type (x) == type (str ()):
-                    x = x.encode (settings.DEFAULT_CHARSET)
+                elif sys.version_ifno < (3, 0):
+                    if type (x) == type (unicode ()) or type (x) == type (str ()):
+                        x = x.encode (settings.DEFAULT_CHARSET)
+                elif sys.version_info >= (3, 0):
+                    if type (x) == type (str ()):
+                        x = x.encode (settings.DEFAULT_CHARSET)
                 tempArgs.append (x)
                 args = tuple (tempArgs)
             query = query.replace("%s","?")

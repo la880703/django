@@ -92,7 +92,7 @@ class DatabaseCreation(BaseDatabaseCreation):
         database already exists. Returns the name of the test database created.
         """
         if verbosity >= 1:
-            print "Creating test database '%s'..." % self.connection.alias
+            print ("Creating test database '%s'..." % self.connection.alias)
 
         test_database_name = self._create_test_db(verbosity, autoclobber)
 
@@ -144,29 +144,29 @@ class DatabaseCreation(BaseDatabaseCreation):
         # Create the test database and start the cubrid server.
         try:
             subprocess.call(["cubrid", 'createdb' , '--db-volume-size=20M', '--log-volume-size=20M', "%s" % test_database_name])
-            print 'Created'
+            print ('Created')
             subprocess.call(["cubrid", "server", "start", "%s" % test_database_name])
-            print 'Started'
+            print ('Started')
 			
-        except Exception, e:
+        except Exception as e:
             sys.stderr.write("Got an error creating the test database: %s\n" % e)
             if not autoclobber:
                 confirm = raw_input("Type 'yes' if you would like to try deleting the test database '%s', or 'no' to cancel: " % test_database_name)
             if autoclobber or confirm == 'yes':
                 try:
                     if verbosity >= 1:
-                        print "Destroying old test database..."
+                        print ("Destroying old test database...")
                         subprocess.call(["cubrid", "server", "stop", "%s" % test_database_name])
                         subprocess.call(["cubrid", "deletedb", "%s" % test_database_name])
 
-                        print "Creating test database..."
+                        print ("Creating test database...")
                         subprocess.call(["cubrid", 'createdb' , '--db-volume-size=20M', '--log-volume-size=20M', "%s" % test_database_name])
                         subprocess.call(["cubrid", "server", "start", "%s" % test_database_name])
-                except Exception, e:
+                except Exception as e:
                     sys.stderr.write("Got an error recreating the test database: %s\n" % e)
                     sys.exit(2)
             else:
-                print "Tests cancelled."
+                print ("Tests cancelled.")
                 sys.exit(1)
 
         return test_database_name
@@ -189,7 +189,7 @@ class DatabaseCreation(BaseDatabaseCreation):
         database already exists. Returns the name of the test database created.
         """
         if verbosity >= 1:
-            print "Destroying test database '%s'..." % self.connection.alias
+            print ("Destroying test database '%s'..." % self.connection.alias)
         self.connection.close()
         test_database_name = self.connection.settings_dict['NAME']
         self.connection.settings_dict['NAME'] = old_database_name
