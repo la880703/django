@@ -22,7 +22,7 @@ from cubrid_django.validation import DatabaseValidation
 from django.utils import timezone
 
 DatabaseError = Database.DatabaseError
-IntegrityError = Database.IntegrityError
+#IntegrityError = Database.IntegrityError
 
 class CursorWrapper(object):
     """
@@ -60,8 +60,8 @@ class CursorWrapper(object):
 
             return self.cursor.execute(query, args)
 
-        except Database.IntegrityError as e:
-            raise utils.IntegrityError, utils.IntegrityError(*tuple(e)), sys.exc_info()[2]
+        #except Database.IntegrityError as e:
+        #    raise utils.IntegrityError, utils.IntegrityError(*tuple(e)), sys.exc_info()[2]
         except Database.DatabaseError, e:
             raise utils.DatabaseError, utils.DatabaseError(*tuple(e)), sys.exc_info()[2]
 
@@ -81,9 +81,9 @@ class CursorWrapper(object):
                 args = tuple (tempArgs)
             query = query.replace("%s","?")
             return self.cursor.executemany(query, args)
-        except Database.IntegrityError, e:
-            raise utils.IntegrityError, utils.IntegrityError(*tuple(e)), sys.exc_info()[2]
-        except Database.DatabaseError, e:
+        #except Database.IntegrityError, e:
+        #    raise utils.IntegrityError, utils.IntegrityError(*tuple(e)), sys.exc_info()[2]
+        except Database.DatabaseError as e:
             raise utils.DatabaseError, utils.DatabaseError(*tuple(e)), sys.exc_info()[2]
 
     def __getattr__(self, attr):
@@ -282,14 +282,17 @@ class DatabaseWrapper(BaseDatabaseWrapper):
                 url += ':localhost'
             if settings_dict['PORT']:
                 url += ':' + settings_dict['PORT']
+            else:
+                url += ':'
             if settings_dict['NAME']:
                 url += ':' + settings_dict['NAME']
             if settings_dict['USER']:
                 user = settings_dict['USER']
-#                url += ':' + settings_dict['USER']
             if settings_dict['PASSWORD']:
                 passwd = settings_dict['PASSWORD']
-#                url += ':' + settings_dict['PASSWORD']
+            url += ':::'
+
+            print (url)
 
             self.connection = Database.connect(url, user, passwd)
             connection_created.send(sender=self.__class__, connection=self)
